@@ -27,7 +27,7 @@ var port = process.env.PORT || 8080;
 app.use(express.static('public'));
 app.use(express.static('views'));
 
-app.get("./",(req,res)=>
+app.get("/",(req,res)=>
 {
      res.sendFile(path.join(__dirname+"/views/home.html"));
 });
@@ -37,7 +37,7 @@ app.get("./views/home.html",(req,res)=>
      res.sendFile(path.join(__dirname+"/views/about.html"));
 });
 
-app.get("./lego/sets/:theme?",(req,res)=>
+app.get("/lego/sets/:theme?",(req,res)=>
 {
      if(req.params.theme)
      {
