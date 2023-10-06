@@ -41,8 +41,19 @@ app.get("/lego/sets/:theme?",(req,res)=>
 {
      if(req.params.theme)
      {
-          legoData.getSetsByTheme(req.params.theme).then(data=>{
-          res.send(data)}).catch(err=>{res.send("404: "+err)});  
+          var dummy = req.params.theme;
+          if(isFinite(dummy[0]))
+          {
+               legoData.getSetByNum(req.params.theme).then(data=>{
+                    res.send(data)
+               }).catch(err=>{res.send(err)});
+          }
+          else
+          {
+               legoData.getSetsByTheme(req.params.theme).then(data=>{
+               res.send(data)}).catch(err=>{res.send("404: "+err)}); 
+          }
+
      }
      else
      {
@@ -54,12 +65,6 @@ app.get("/lego/sets/:theme?",(req,res)=>
      }     
 });
 
-app.get("/lego/sets/:id",(req,res)=>
-{
-     legoData.getSetByNum(req.params.id).then(data=>{
-          res.send(data)
-     }).catch(err=>{res.send(err)});
-});
 
 app.get("/lego/sets/404",(req,res)=>
 {
