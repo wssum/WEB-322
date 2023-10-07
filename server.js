@@ -37,36 +37,37 @@ app.get("/views/home.html",(req,res)=>
      res.sendFile(path.join(__dirname+"/views/about.html"));
 });
 
-app.get("/lego/sets/:theme?",(req,res)=>
+app.get("/lego/sets/:id?",(req,res,next)=>
 {
-     if(req.params.theme)
+     if(req.params.id)
      {
-          var dummy = req.params.theme;
-          if(isFinite(dummy[0]))
-          {
-               legoData.getSetByNum(req.params.theme).then(data=>{
-                    res.send(data)
-               }).catch(err=>{res.send(err)});
-          }
-          else
-          {
-               legoData.getSetsByTheme(req.params.theme).then(data=>{
-               res.send(data)}).catch(err=>{res.send("404: "+err)}); 
-          }
-
+          legoData.getSetByNum(req.params.id).then(data=>{
+                    res.send(data);
+           }).catch(err=>{
+               next(err);
+               console.log("404: "+err);
+          });
+     }
+     else if(req.query.theme)
+     {///lego/sets?theme=technic
+          legoData.getSetsByTheme(req.query.theme).then(data=>{
+          res.send(data)}).catch(err=>{
+               next(err);
+               console.log("404: "+err);
+          }); 
      }
      else
      {
           legoData.getAllSets().then((data)=>{
                res.send(data);
           }).catch(err=>{
-               res.send("404: "+err);
+               next(err);
+               console.log("404: "+err);
           })
      }     
 });
 
-
-app.get("/lego/sets/404",(req,res)=>
+app.use((err,req,res,next)=>
 {
      res.sendFile(path.join(__dirname+"/views/404.html"));
 });
