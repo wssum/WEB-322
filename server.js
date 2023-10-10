@@ -69,7 +69,7 @@ app.get("/lego/sets/:id?",(req,res,next)=>
 
 app.use((err,req,res,next)=>
 {
-     res.sendFile(path.join(__dirname+"/views/404.html"));
+     res.status(404).sendFile(path.join(__dirname+"/views/404.html"));
 });
 
 legoData.initialize().then(()=>{
