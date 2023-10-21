@@ -1,0 +1,32 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Collection</title>
+</head>
+<body class = "singleSet">
+  <%- include('partials/navbar', {page: '/about'}) %>
+ <%set.forEach(arg=>{%>
+    <tr>
+        <img width = "300px" src = "<%=arg.img_url%>">
+        <th><%=arg.name%></th>
+        <th><p>Theme:</p><%=arg.theme%></th>
+        <th><p>Year Released:</p><%=arg.year%></th>
+        <th><p>Pieces:</p><%=arg.num_parts%></th>
+        <br>
+        <a class="btn btn-ghost normal-case text-xl" href="#" onclick="history.back(); return false;">Return</a>
+      </tr>
+ <%});%>
+ <p id = "randomMsg"></p>
+ <p id = "author"></p>
+ <script>
+  document.addEventListener("DOMContentLoaded", async ()=>{
+    var fetchedData = await fetch("https://quotable.io/random");
+    var parsedData = await fetchedData.json();
+    var msg = document.getElementById("randomMsg");
+    var writer = document.getElementById("author");
+    msg.textContent = '"'+ parsedData.content + '"';
+    writer.textContent = '-' + parsedData.author;
+  });
+  </script>
+</body>
+</html>

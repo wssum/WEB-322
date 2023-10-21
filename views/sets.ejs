@@ -1,0 +1,31 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Collection</title>
+</head>
+<body>
+  <%- include('partials/navbar', {page: '/about'}) %>
+  <div class="navbar bg-base-100">
+    <li><a class="btn btn-ghost normal-case text-xl" href="/lego/sets?theme=Supplemental">Supplemental</a></li>
+    <li><a class="btn btn-ghost normal-case text-xl" href="/lego/sets?theme=Technic">Technic</a></li>
+    <li><a class="btn btn-ghost normal-case text-xl" href="/lego/sets?theme=Basic Set">Basic Set</a></li>
+  </div>
+  <div class="overflow-x-auto">
+    <table>
+      <tbody>
+        <%lego.forEach(arg=>{%>
+          <tr>
+             <th ><%=arg.name%></th>
+              <td><img width = "100px" src = "<%=arg.img_url%>"></td>
+              <td><a class="btn btn-ghost normal-case text-xl" href="/lego/sets?theme=<%= encodeURIComponent(arg.theme) %>"><p>Theme:</p><%=arg.theme%></a></td>
+              <td><p>Year Released:</p><%=arg.year%></td>
+              <td><p>Pieces:</p><%=arg.num_parts%></td>
+              <td><a class="btn btn-ghost normal-case text-xl" href="/lego/sets/<%=arg.set_num%>"> <%=arg.name%> Details</a></td>
+            </tr>
+       <%});%>
+      </tbody>
+    </table>
+  </div>
+ 
+</body>
+</html>

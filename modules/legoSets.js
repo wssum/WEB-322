@@ -69,16 +69,20 @@ function getSetByNum(setNum)
 {
     return new Promise((resolve,reject)=>{
         var yRn = false;
+        var dummy = [];
         for(x of sets)
         {
             if(x.set_num == setNum)
             { 
-                resolve(x)
+                dummy.push(x)
                 yRn = true;
             }
         }
-        if(yRn == false)
+        if(yRn == true)
         {
+            resolve(dummy);   
+        }
+        else{
             reject("No data found...");
         }
     })
@@ -108,9 +112,9 @@ function getSetsByTheme(Theme)
      
 }
 
-// initialize().then(data=>{console.log(data)}).catch(err=>{console.log(err)});;
+ //initialize().then(data=>{console.log(data)}).catch(err=>{console.log(err)});
 // getAllSets().then(data=>{console.log(data)}).catch(err=>{console.log(err)});
-// getSetByNum("01-2").then(data=>{console.log(data)}).catch(err=>{console.log(err)});
+ //getSetByNum("028-1").then(data=>{console.log(data)}).catch(err=>{console.log(err)});
 // getSetsByTheme("te").then(data=>{console.log(data)}).catch(err=>{console.log(err)});
 
 module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme }

@@ -25,51 +25,54 @@ var path = require("path");
 var app = express();
 var port = process.env.PORT || 8080;
 app.use(express.static('public'));
-app.use(express.static('views'));
+app.set("view engine", "ejs");
 
 app.get("/",(req,res)=>
 {
-     res.sendFile(path.join(__dirname+"/views/home.html"));
+     res.render("home")
 });
 
-app.get("/views/home.html",(req,res)=>
+app.get("/lego/sets/:id",(req,res,next)=>
 {
-     res.sendFile(path.join(__dirname+"/views/about.html"));
+     legoData.getSetByNum(req.params.id).then(data=>{
+          res.render("set", {set: data});
+      }).catch(err=>{
+          next({message: "Unable to find requested set."});
+          console.log("404: "+err);
+     });
 });
 
-app.get("/lego/sets/:id?",(req,res,next)=>
+app.get("/views/about",(req,res)=>
 {
-     if(req.params.id)
+     res.render("about");
+});
+
+app.get("/lego/sets",(req,res,next)=>
+{
+     if(req.query.theme)
      {
-          legoData.getSetByNum(req.params.id).then(data=>{
-                    res.send(data);
-           }).catch(err=>{
-               next(err);
-               console.log("404: "+err);
-          });
-     }
-     else if(req.query.theme)
-     {///lego/sets?theme=technic
           legoData.getSetsByTheme(req.query.theme).then(data=>{
-          res.send(data)}).catch(err=>{
-               next(err);
+               res.render("sets",{lego:data});}).catch(err=>{
+               next({message: "Unable to find requested sets."});
                console.log("404: "+err);
           }); 
      }
      else
      {
           legoData.getAllSets().then((data)=>{
-               res.send(data);
+               res.render("sets",{lego:data});
           }).catch(err=>{
-               next(err);
+               next({message: "I'm sorry, we're unable to find what you're looking for."});
                console.log("404: "+err);
           })
      }     
 });
 
+//problem here is for some odd reason the /lego/sets/:id keeps leading to here
+//and theres not even an error
 app.use((err,req,res,next)=>
 {
-     res.status(404).sendFile(path.join(__dirname+"/views/404.html"));
+   res.status(404).render("404",{message: err.message});
 });
 
 legoData.initialize().then(()=>{
