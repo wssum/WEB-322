@@ -19,34 +19,57 @@ shared with any other student or 3rd party content provider. This submitted
 piece of work is entirely of my own creation.
 
 /////////////////////////////////////////////////////////////////////////*/
+require('dotenv').config();
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize(process.env.DB_DATABASE,process.env.DB_USER,process.env.DB_PASSWORD,
+    {
+        host: process.env.DB_HOST,
+        dialect: 'postgres',
+        port: 5432,
+        dialectOptions: {
+          ssl: { rejectUnauthorized: false },
+        },
+      });
+     
+const Theme = sequelize.define('Theme', { 
+    id:{
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoincrement: true,
+    },
+    name: Sequelize.STRING
+ });
 
-const setData = require("../data/setData");
-const themeData = require("../data/themeData");
-let sets = [];
+const Set = sequelize.define('Set', { 
+    set_num:{
+        type:Sequelize.STRING,
+        primaryKey:true,
+    },
+    name: Sequelize.STRING,
+    year: Sequelize.INTEGER,
+    num_parts: Sequelize.INTEGER,
+    theme_id: Sequelize.INTEGER,
+    img_url: Sequelize.STRING,
+ },
+ {
+    createdAt: false,
+    updatedAt: false,
+ });
+
+
+ Set.belongsTo(Theme, {foreignKey: 'theme_id'});
+
+
 
 function initialize()
 {
     return new Promise((resolve,reject)=>{
-        var dummyID = 0;
-        for(const x of setData)
-        {
-            for(const z of themeData)
+        sequelize.sync().then(data=>{
+            resolve(data);
+        }).catch(err=>
             {
-                if(x.theme_id == z.id)
-                {
-                   x.theme = z.name;
-                }
-            }
-            sets.push(x);
-        }
-        if(sets.length> 0)
-        {
-            resolve();
-        }
-        else
-        {
-            reject();
-        }
+                reject(err);
+            })
     });
    
 }
@@ -54,14 +77,10 @@ function initialize()
 function getAllSets()
 {
     return new Promise((resolve, reject)=>{
-        if(sets.length>0)
-        {
-            resolve(sets);
-        }
-        else
-        {
-            reject();
-        }
+        Set.findAll({include: [Theme]}).then(data=>
+            {
+                resolve(data);
+            }).catch(err=>{reject(err)});
     });
 }
 
@@ -112,9 +131,5 @@ function getSetsByTheme(Theme)
      
 }
 
- //initialize().then(data=>{console.log(data)}).catch(err=>{console.log(err)});
-// getAllSets().then(data=>{console.log(data)}).catch(err=>{console.log(err)});
- //getSetByNum("028-1").then(data=>{console.log(data)}).catch(err=>{console.log(err)});
-// getSetsByTheme("te").then(data=>{console.log(data)}).catch(err=>{console.log(err)});
 
 module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme }
