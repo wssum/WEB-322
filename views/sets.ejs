@@ -17,7 +17,7 @@
           <tr>
              <th ><%=arg.name%></th>
               <td><img width = "100px" src = "<%=arg.img_url%>"></td>
-              <td><a class="btn btn-ghost normal-case text-xl" href="/lego/sets?theme=<%= encodeURIComponent(arg.theme) %>"><p>Theme:</p><%=arg.theme%></a></td>
+              <td><a class="btn btn-ghost normal-case text-xl" href="/lego/sets?theme=<%= encodeURIComponent(arg.Theme.name) %>"><p>Theme:</p><%=arg.Theme.name%></a></td>
               <td><p>Year Released:</p><%=arg.year%></td>
               <td><p>Pieces:</p><%=arg.num_parts%></td>
               <td><a class="btn btn-ghost normal-case text-xl" href="/lego/sets/<%=arg.set_num%>"> <%=arg.name%> Details</a></td>

@@ -26,7 +26,8 @@ var app = express();
 var port = process.env.PORT || 8080;
 app.use(express.static('public'));
 app.set("view engine", "ejs");
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.get("/",(req,res)=>
 {
      res.render("home")
@@ -45,6 +46,48 @@ app.get("/lego/sets/:id",(req,res,next)=>
 app.get("/views/about",(req,res)=>
 {
      res.render("about");
+});
+
+app.get("/lego/editSet/:num",async (req,res)=>
+{
+try{
+var setData = await legoData.getSetByNum(req.params.num);
+var themeData = await legoData.getAllThemes();
+res.render("editSet", { themes: themeData, set: setData });
+}catch(err)
+{
+     res.status(404).render("404", { message: err });
+}
+});
+
+app.post("/lego/editSet",(req,res)=>
+{
+     legoData.editSet(req.body.set_num, req.body).then(data=>{
+          res.redirect("/lego/sets");
+      }).catch(err=>{
+          res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+          console.log("500: "+err);
+     });
+});
+
+app.get("/lego/addSet",(req,res,next)=>
+{
+     legoData.getAllThemes().then(data=>{
+          res.render("addSet", { themes: data });
+      }).catch(err=>{
+          next({message: "Unable to find requested set."});
+          console.log("404: "+err);
+     });
+});
+
+app.post("/lego/addSet",(req,res)=>
+{
+     legoData.addSet(req.body).then(data=>{
+          res.redirect("/lego/sets");
+      }).catch(err=>{
+          res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+          console.log("500: "+err);
+     });
 });
 
 app.get("/lego/sets",(req,res,next)=>
@@ -68,8 +111,6 @@ app.get("/lego/sets",(req,res,next)=>
      }     
 });
 
-//problem here is for some odd reason the /lego/sets/:id keeps leading to here
-//and theres not even an error
 app.use((err,req,res,next)=>
 {
    res.status(404).render("404",{message: err.message});

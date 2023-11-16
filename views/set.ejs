@@ -5,17 +5,16 @@
 </head>
 <body class = "singleSet">
   <%- include('partials/navbar', {page: '/lego/sets'}) %>
- <%set.forEach(arg=>{%>
     <tr>
-        <img width = "300px" src = "<%=arg.img_url%>">
-        <th><%=arg.name%></th>
-        <th><p>Theme:</p><%=arg.theme%></th>
-        <th><p>Year Released:</p><%=arg.year%></th>
-        <th><p>Pieces:</p><%=arg.num_parts%></th>
+        <img width = "300px" src = "<%=set.img_url%>">
+        <th><%=set.name%></th>
+        <th><p>Theme:</p><%=set.theme%></th>
+        <th><p>Year Released:</p><%=set.year%></th>
+        <th><p>Pieces:</p><%=set.num_parts%></th>
         <br>
+        <a class="btn btn-ghost normal-case text-xl" href="/lego/editSet/<%=set.set_num %>" >Edit this set</a>
         <a class="btn btn-ghost normal-case text-xl" href="#" onclick="history.back(); return false;">Return</a>
       </tr>
- <%});%>
  <p id = "randomMsg"></p>
  <p id = "author"></p>
  <script>

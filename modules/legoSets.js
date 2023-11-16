@@ -38,6 +38,10 @@ const Theme = sequelize.define('Theme', {
     autoincrement: true,
     },
     name: Sequelize.STRING
+ },
+ {
+    createdAt: false,
+    updatedAt: false,
  });
 
 const Set = sequelize.define('Set', { 
@@ -56,10 +60,7 @@ const Set = sequelize.define('Set', {
     updatedAt: false,
  });
 
-
  Set.belongsTo(Theme, {foreignKey: 'theme_id'});
-
-
 
 function initialize()
 {
@@ -84,52 +85,74 @@ function getAllSets()
     });
 }
 
-function getSetByNum(setNum)
-{
-    return new Promise((resolve,reject)=>{
-        var yRn = false;
-        var dummy = [];
-        for(x of sets)
-        {
-            if(x.set_num == setNum)
-            { 
-                dummy.push(x)
-                yRn = true;
-            }
-        }
-        if(yRn == true)
-        {
-            resolve(dummy);   
-        }
-        else{
-            reject("No data found...");
-        }
-    })
-
+function getSetByNum(setNum) {
+    return new Promise((resolve, reject) => {
+        Set.findAll({
+            include: [Theme],
+            where: { set_num: setNum }
+        }).then(data => {
+            resolve(data[0]); // Returns the first set in the array
+        }).catch(err => {
+            reject(err);
+        });
+    });
 }
 
-function getSetsByTheme(Theme)
+function getSetsByTheme(dataTheme)
 {
-    return new Promise((resolve,reject)=>{    
-        var dummy = [];
-        for(x of sets)
-        {
-            if(x.theme.toLowerCase().includes(Theme.toLowerCase()))
-            {
-                dummy.push(x);
+    return new Promise((resolve, reject)=>{
+        Set.findAll({include: [Theme], where: {
+            '$Theme.name$': {
+            [Sequelize.Op.iLike]: `%${dataTheme}%`
             }
-        }
-        if(dummy.length > 0)
-        {
-            resolve(dummy);
-        }
-        else{
-            reject("No data found....");
-        }
-    })
-
-     
+            }}).then(data=>
+                        {
+                            resolve(data);
+                        }).catch(err=>{reject(err)});
+    });
 }
 
+function addSet(setData)
+{
+  return new Promise(async (resolve,reject)=>
+  {
+    try{
+       await Set.create(setData);
+       resolve();
+    }catch(err){
+          reject(err);
+    }
+  });
+}
 
-module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme }
+function getAllThemes()
+{
+   return new Promise(async (resolve,reject)=>
+   {
+    try{
+        var dummy = await Theme.findAll();
+        resolve(dummy);
+     }catch(err){
+           reject(err.errors[0].message);
+     }
+   });
+}
+
+function editSet(setNum, setData)
+{
+    return new Promise(async (resolve,reject)=>{
+        try{
+           await Set.update(setData,{where:{set_num: setNum}});
+           resolve();
+        }
+        catch(err)
+        {
+            reject(err.errors[0].message);
+        }
+    });
+}
+
+module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme, addSet, getAllThemes, editSet};
+// Code Snippet to insert existing data from Set / Themes
+
+  
