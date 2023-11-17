@@ -152,7 +152,20 @@ function editSet(setNum, setData)
     });
 }
 
-module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme, addSet, getAllThemes, editSet};
+function deleteSet(setNum)
+{
+return new Promise(async (resolve,reject)=>
+{
+try{
+await Set.destroy({where:{set_num:setNum}});
+}catch(err)
+{
+    reject(err.errors[0].message);
+}
+});
+}
+
+module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme, addSet, getAllThemes, editSet,deleteSet};
 // Code Snippet to insert existing data from Set / Themes
 
   

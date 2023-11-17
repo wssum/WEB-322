@@ -27,7 +27,6 @@ var port = process.env.PORT || 8080;
 app.use(express.static('public'));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 app.get("/",(req,res)=>
 {
      res.render("home")
@@ -65,6 +64,17 @@ app.post("/lego/editSet",(req,res)=>
      legoData.editSet(req.body.set_num, req.body).then(data=>{
           res.redirect("/lego/sets");
       }).catch(err=>{
+          res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+          console.log("500: "+err);
+     });
+});
+
+app.get("/lego/deleteSet/:num",(req,res)=>
+{
+legoData.deleteSet(req.params.num).then(data=>
+     {
+          res.redirect("/lego/sets");
+     }).catch(err=>{
           res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
           console.log("500: "+err);
      });
