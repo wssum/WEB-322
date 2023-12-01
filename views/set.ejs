@@ -12,7 +12,9 @@
         <th><p>Year Released:</p><%=set.year%></th>
         <th><p>Pieces:</p><%=set.num_parts%></th>
         <br>
+        <% if(session.user){%>
         <a class="btn btn-ghost normal-case text-xl" href="/lego/editSet/<%=set.set_num %>" >Edit this set</a>
+        <% }%>
         <a class="btn btn-ghost normal-case text-xl" href="#" onclick="history.back(); return false;">Return</a>
       </tr>
  <p id = "randomMsg"></p>

@@ -1,0 +1,32 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Registering</title>
+</head>
+    <body>
+<%- include('partials/navbar', {page: '/register' }) %>
+<% if(errorMessage){%>
+    <div class="alert alert-error">
+    <span><%= errorMessage %></span>
+    </div>
+<%}else if(successMessage){%>
+<div class="alert">
+    <span><%= successMessage %></span>
+    </div>
+    <a href="/login" class="btn btn-success">
+    Proceed to Log in
+    </a>
+<%}%>
+<% if(!successMessage){ %>
+<form action = "/register" method="post">
+    <input name = "userName" required = "true" type = "text" placeholder="User Name" class="input input-bordered w-full max-w-xs" />
+    <input name = "password" required = "true" type = "password" placeholder="Password" class="input input-bordered w-full max-w-xs" />
+    <input name = "password2" required = "true" type = "password" placeholder="Confirm Password" class="input input-bordered w-full max-w-xs" />
+    <input name = "email" required = "true" type = "email" placeholder="Email Address" class="input input-bordered w-full max-w-xs" />
+    <button type = "submit" value = "Register" class = "homeNav navbar bg-neutral text-neutral-content btn btn-ghost normal-case text-xl">Register</button>
+</form>
+<% } %>
+
+
+    </body>
+</html>

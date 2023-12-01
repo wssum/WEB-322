@@ -1,0 +1,21 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Logging in</title>
+</head>
+    <body>   
+<%- include('partials/navbar', {page: '/login'}) %>
+<form action="/login" method="post">
+    <label for="user" class="text-sm font-semibold text-gray-600">User Name</label>
+   <input id = "user" name = "userName" required = "true" type = "text" placeholder="User Name" class="input input-bordered w-full max-w-xs" />
+   <label for="pw" class="text-sm font-semibold text-gray-600">Password</label>
+   <input id = "pw" name = "password" required = "true" type = "password" placeholder="Password" class="input input-bordered w-full max-w-xs" />
+     <button type = "submit" value = "Login" class = "homeNav navbar bg-neutral text-neutral-content btn btn-ghost normal-case text-xl">Login</button>
+</form>
+<% if(errorMessage){%>
+<div class="alert alert-error">
+    <span><%= errorMessage %></span>
+    </div>
+    <%}%>
+    </body>
+</html>

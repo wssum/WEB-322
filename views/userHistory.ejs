@@ -1,0 +1,38 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>History</title>
+</head>
+<body>
+  <%- include('partials/navbar', {page: "/userHistory"}) %>
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold"><%= session.user.userName %></h1>
+        <p class ="py-6"><%= session.user.email %></p>
+      </div>
+    </div>
+    <ul>
+        <div class="overflow-x-auto">
+            <table class="table">
+              <!-- head -->
+              <thead>
+                <tr>
+                  <th>Date/Time</th>
+                  <th>User-Agent</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% session.user.loginHistory.forEach(arg => { %>
+                    <tr>
+                        <td><%= arg.dateTime %></td>
+                        <td><%= arg.userAgent %></td>
+                      </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+    </ul>
+    
+</body>
+
+</html>
